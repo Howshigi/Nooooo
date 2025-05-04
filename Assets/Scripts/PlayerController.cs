@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,12 +16,17 @@ public class PlayerController : MonoBehaviour
 
     private bool hasPowerUp = false;
 
+    public TextMeshProUGUI cooldownText;
+    public Image cooldownIcon;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
         smashAction = InputSystem.actions.FindAction("Smash");
         breakAction = InputSystem.actions.FindAction("Break");
+
+        cooldownIcon.gameObject.SetActive(false);
     }
 
     void Update()
@@ -49,6 +56,8 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             hasPowerUp = true;
             StartCoroutine(PowerUpCooldownRoutine(5));
+
+            cooldownIcon.gameObject.SetActive(true);
         }
     }
 
@@ -68,12 +77,18 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PowerUpCooldownRoutine(float cooldownTime)
     {
-        yield return new WaitForSeconds(cooldownTime);
-        hasPowerUp = false;
-        if (runingSmashRoutine != null)
+        float timeLeft = cooldownTime;
+        while (timeLeft > 0)
         {
-            StopCoroutine(runingSmashRoutine);
+            cooldownText.text = Mathf.Ceil(timeLeft).ToString();
+            timeLeft -= Time.deltaTime;
+            yield return null;
         }
+
+        hasPowerUp = false;
+        cooldownText.text = "";
+
+        cooldownIcon.gameObject.SetActive(false);
     }
 
     IEnumerator SmashRoutine()
