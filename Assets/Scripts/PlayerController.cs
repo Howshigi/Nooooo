@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(other.gameObject);
             hasPowerUp = true;
-            StartCoroutine(PowerUpCooldownRoutine(60));
+            StartCoroutine(PowerUpCooldownRoutine(5));
         }
     }
 

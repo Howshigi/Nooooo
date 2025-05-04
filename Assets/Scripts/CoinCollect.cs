@@ -12,7 +12,7 @@ public class CoinCollect : MonoBehaviour
         if (other.CompareTag("Coin"))
         {
             coin++;
-            coinText.text = "Coin: " + coin.ToString();
+            coinText.text = " " + coin.ToString();
             Debug.Log("Coins collected: " + coin);
             Destroy(other.gameObject);
         }
